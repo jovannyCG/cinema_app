@@ -8,7 +8,7 @@ import 'package:cinema_app/infrastructure/datasources/models/moviedb/moviedb_res
 import 'package:cinema_app/infrastructure/mappers/movie_mapper.dart';
 import 'package:dio/dio.dart';
 
-class MoviedbDatasource extends  MoviesDatasource{
+class MoviedbDatasourceImpl extends  MoviesDatasource{
 
   //cliente de peticiones htpp para the moviedb
   final dio = Dio(BaseOptions(
