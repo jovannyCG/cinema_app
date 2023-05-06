@@ -1,5 +1,5 @@
 import 'package:cinema_app/domain/entities/movie.dart';
-import 'package:cinema_app/presentation/providers/movies/movies_repository_provider.dart';
+import 'package:cinema_app/presentation/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final nowPlayingMoviesProvider =
