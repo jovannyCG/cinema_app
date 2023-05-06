@@ -1,4 +1,7 @@
+
+import 'package:cinema_app/config/constants/enviroment.dart';
 import 'package:flutter/material.dart';
+
 
 class HomePage extends StatelessWidget {
   static const name = 'home-page';
@@ -7,9 +10,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
       body: Center(
-        child: Text('Hola Mundo'),
+        child: Text(Enviroment.movieDbKey),
       ),
     );
   }
