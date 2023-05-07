@@ -37,7 +37,6 @@ class _HomeViewState extends ConsumerState<_HomeView> {
       children: [
         const AppBarMovie(),
         MoviesSlide(movies:  movies,),
-        
       ],
     );
   }
