@@ -42,7 +42,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
           movies: movies,
         ),
         MovieHorizontalListView(
-          title : 'en cines',
+          title : 'En cines',
           subtitle: 'lunes 20',
           movies: moviesNowPlayer,)
       ],

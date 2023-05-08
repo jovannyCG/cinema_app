@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cinema_app/config/helpers/human_formats.dart';
 import 'package:cinema_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 
@@ -79,10 +80,11 @@ class _SlideHorizontal extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.star_half_outlined, color:  Colors.yellow.shade800,),
-              const SizedBox(height: 5,),
+              const SizedBox(width: 5,),
               Text('${movie.voteAverage}', style: textStyle.bodyMedium?.copyWith(color: Colors.yellow.shade800),),
-              const SizedBox(height: 5,),
-              Text('${movie.popularity}', style: textStyle.bodySmall),
+              const SizedBox(width: 10,),
+              Text(HumanFormats.number(movie.popularity), style: textStyle.bodySmall),
+              //Text('${movie.popularity}', style: textStyle.bodySmall),
             ],
             )
       
