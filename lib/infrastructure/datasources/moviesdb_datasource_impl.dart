@@ -23,7 +23,7 @@ class MoviedbDatasourceImpl extends  MoviesDatasource{
   @override
   Future<List<Movie>> getNowPlaying({int page = 1}) async{
     //peticion http
-    final resp = await dio.get('/movie/now_playing');
+    final resp = await dio.get('/movie/now_playing', queryParameters: {'page': page});
     //almacenamiento de la respuesta json de tipp moviedb
     final moviedbResponse = MovieDbResponse.fromJson(resp.data);
     // mapeo de la respuesta para convertirla a una respuesta de tipo movie usando el mapper
