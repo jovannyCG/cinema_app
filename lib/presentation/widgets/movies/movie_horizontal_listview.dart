@@ -16,7 +16,8 @@ class MovieHorizontalListView extends StatefulWidget {
       this.loadNextPage});
 
   @override
-  State<MovieHorizontalListView> createState() => _MovieHorizontalListViewState();
+  State<MovieHorizontalListView> createState() =>
+      _MovieHorizontalListViewState();
 }
 
 class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
@@ -24,17 +25,18 @@ class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() { 
-  if(widget.loadNextPage == null) return;
-  if(scrollController.position.pixels +200 >= scrollController.position.maxScrollExtent){
-    widget.loadNextPage!();
-  }
-
+    scrollController.addListener(() {
+      if (widget.loadNextPage == null) return;
+      if (scrollController.position.pixels + 200 >=
+          scrollController.position.maxScrollExtent) {
+        widget.loadNextPage!();
+      }
     });
   }
+
   @override
   void dispose() {
-   scrollController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -44,15 +46,16 @@ class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
       height: 350,
       child: Column(
         children: [
-          if (widget.title != null && widget.subtitle != null) _MovieTitle(widget.title, widget.subtitle),
+          if (widget.title != null && widget.subtitle != null)
+            _MovieTitle(widget.title, widget.subtitle),
           Expanded(
               child: ListView.builder(
-                controller: scrollController,
+            controller: scrollController,
             itemCount: widget.movies.length,
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return _SlideHorizontal(movie: widget.movies[index]);
+              return FadeInRight(child: _SlideHorizontal(movie: widget.movies[index]));
             },
           )),
         ],
@@ -90,28 +93,39 @@ class _SlideHorizontal extends StatelessWidget {
             ),
           ),
         ),
-
-        const SizedBox(height: 5,),
-
-        SizedBox( 
+        const SizedBox(
+          height: 5,
+        ),
+        SizedBox(
           width: 150,
-          child: Text(movie.title,
-          maxLines: 2,
-          style: textStyle.titleSmall,
+          child: Text(
+            movie.title,
+            maxLines: 2,
+            style: textStyle.titleSmall,
           ),
-          ),
-
-          Row(
-            children: [
-              Icon(Icons.star_half_outlined, color:  Colors.yellow.shade800,),
-              const SizedBox(width: 5,),
-              Text('${movie.voteAverage}', style: textStyle.bodyMedium?.copyWith(color: Colors.yellow.shade800),),
-              const SizedBox(width: 10,),
-              Text(HumanFormats.number(movie.popularity), style: textStyle.bodySmall),
-              //Text('${movie.popularity}', style: textStyle.bodySmall),
-            ],
-            )
-      
+        ),
+        Row(
+          children: [
+            Icon(
+              Icons.star_half_outlined,
+              color: Colors.yellow.shade800,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              '${movie.voteAverage}',
+              style:
+                  textStyle.bodyMedium?.copyWith(color: Colors.yellow.shade800),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(HumanFormats.number(movie.popularity),
+                style: textStyle.bodySmall),
+            //Text('${movie.popularity}', style: textStyle.bodySmall),
+          ],
+        )
       ]),
     );
   }
