@@ -29,7 +29,9 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   void initState() {
     super.initState();
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-    ref.read( popularMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
   }
 
   @override
@@ -37,6 +39,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final moviesNowPlayer = ref.watch(nowPlayingMoviesProvider);
     final movies = ref.watch(moviesSlideShowProvider);
     final popularMovies = ref.watch(popularMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
+    final toRatedMovies = ref.watch(topRatedMoviesProvider);
     return CustomScrollView(
       slivers: [
         const SliverAppBar(
@@ -59,12 +63,26 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                   loadNextPage: () {
                     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
                   }),
-                  MovieHorizontalListView(
+              MovieHorizontalListView(
                   title: 'Populares',
                   subtitle: '',
                   movies: popularMovies,
                   loadNextPage: () {
                     ref.read(popularMoviesProvider.notifier).loadNextPage();
+                  }),
+              MovieHorizontalListView(
+                  title: 'roximamente',
+                  subtitle: '',
+                  movies: upcomingMovies,
+                  loadNextPage: () {
+                    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+                  }),
+              MovieHorizontalListView(
+                  title: 'Mejor Valoradas',
+                  subtitle: '',
+                  movies: toRatedMovies,
+                  loadNextPage: () {
+                    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
                   }),
             ],
           );
