@@ -15,13 +15,13 @@ final popularMoviesProvider =
 
 final upcomingMoviesProvider =
     StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
-      final fechMoreMovies = ref.watch(movieRepositoryProvider).getPopular;
+      final fechMoreMovies = ref.watch(movieRepositoryProvider).getUpcoming;
   return MoviesNotifier(fechMoreMovies: fechMoreMovies);
 });
 
 final topRatedMoviesProvider =
     StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
-      final fechMoreMovies = ref.watch(movieRepositoryProvider).getPopular;
+      final fechMoreMovies = ref.watch(movieRepositoryProvider).getTopRated;
   return MoviesNotifier(fechMoreMovies: fechMoreMovies);
 });
 
