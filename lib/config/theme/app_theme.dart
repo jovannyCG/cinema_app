@@ -12,7 +12,7 @@ const colorList = [
 ];
 
 class AppTheme {
- final int selectedColor;
+  final int selectedColor;
   final bool isDarkmode;
 
   AppTheme({this.isDarkmode = false, this.selectedColor = 0})
@@ -26,15 +26,8 @@ class AppTheme {
       colorSchemeSeed: Colors.blue,
       appBarTheme: const AppBarTheme(centerTitle: true));
 
-      AppTheme copyWith({
-    int? selectedColor,
-    bool? isDarkmode
-  }) => AppTheme(
-    selectedColor: selectedColor ?? this.selectedColor,
-    isDarkmode: isDarkmode ?? this.isDarkmode,
-  );
+  AppTheme copyWith({int? selectedColor, bool? isDarkmode}) => AppTheme(
+        selectedColor: selectedColor ?? this.selectedColor,
+        isDarkmode: isDarkmode ?? this.isDarkmode,
+      );
 }
-
-
-
-
