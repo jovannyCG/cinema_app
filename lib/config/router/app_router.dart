@@ -1,7 +1,6 @@
 import 'package:cinema_app/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
-
 // configuración de go_ router
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -9,7 +8,18 @@ final appRouter = GoRouter(
     GoRoute(
       name: HomePage.name,
       path: '/',
-      builder: (context, state) =>  const HomePage(),
+      builder: (context, state) => const HomePage(),
+      routes: [
+        GoRoute(
+      name: MovieScreen.name,
+      path: 'movie/:id',
+      builder: (context, state) {
+        final movieId = state.pathParameters['id'] ?? 'no-id';
+        return  MovieScreen(movieId: movieId,);
+      }
     ),
+      ]
+    ),
+    
   ],
 );
