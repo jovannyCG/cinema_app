@@ -1,12 +1,13 @@
-//implementacion del datasource de the movieDB
+
 import 'package:cinema_app/config/constants/enviroment.dart';
 import 'package:cinema_app/domain/datasources/movies_datasource.dart';
 import 'package:cinema_app/domain/entities/movie.dart';
-import 'package:cinema_app/infrastructure/datasources/models/moviedb/movie_details.dart';
-import 'package:cinema_app/infrastructure/datasources/models/moviedb/moviedb_response.dart';
+import 'package:cinema_app/infrastructure/models/moviedb/movie_details.dart';
+import 'package:cinema_app/infrastructure/models/moviedb/moviedb_response.dart';
 import 'package:cinema_app/infrastructure/mappers/movie_mapper.dart';
 import 'package:dio/dio.dart';
 
+//implementacion del datasource de the movieDB
 class MoviedbDatasourceImpl extends MoviesDatasource {
   //cliente de peticiones htpp para the moviedb
   final dio = Dio(BaseOptions(
