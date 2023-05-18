@@ -1,7 +1,9 @@
 import 'package:cinema_app/domain/entities/movie.dart';
-import 'package:cinema_app/presentation/providers/movies/movie_info_provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../providers/providers.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -18,6 +20,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   void initState() {
     super.initState();
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
+    ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
   }
 
   @override
@@ -66,7 +69,6 @@ class _MovieDescripction extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-           
             children: [
               //iamgen
               ClipRRect(
@@ -83,38 +85,42 @@ class _MovieDescripction extends StatelessWidget {
               SizedBox(
                 width: (size.width - 40) * 0.7,
                 child: Column(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  Text(
-                    movie.title,
-                    style: textStyle.titleLarge,
-                  ),
-                  Text(
-                    movie.overview,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                ]),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        movie.title,
+                        style: textStyle.titleLarge,
+                      ),
+                      Text(
+                        movie.overview,
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                    ]),
               ),
             ],
           ),
         ),
-         //generos
-          Padding(padding: const EdgeInsets.all(8),
+        //generos
+        Padding(
+          padding: const EdgeInsets.all(8),
           child: Wrap(
             children: [
               ...movie.genreIds.map((gender) => Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: Chip(label: Text(gender), 
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),),
-              )),
+                    margin: const EdgeInsets.only(right: 10),
+                    child: Chip(
+                      label: Text(gender),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  )),
               const SizedBox(
-                    height: 100,
-                  ),
+                height: 100,
+              ),
             ],
           ),
-          )
+        )
       ],
     );
   }

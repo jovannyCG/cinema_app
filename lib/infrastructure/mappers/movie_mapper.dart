@@ -1,8 +1,8 @@
 // este archivo lee diferentes modelos y crea una entidad de tipo movie
 
 import 'package:cinema_app/domain/entities/movie.dart';
-import 'package:cinema_app/infrastructure/datasources/models/moviedb/movie_details.dart';
-import 'package:cinema_app/infrastructure/datasources/models/moviedb/movie_from_moviedb.dart';
+import 'package:cinema_app/infrastructure/models/moviedb/movie_details.dart';
+import 'package:cinema_app/infrastructure/models/moviedb/movie_from_moviedb.dart';
 
 class MovieMapper {
   static Movie movieDBToEntity(MovieFromMovieDB moviedb) => Movie(
