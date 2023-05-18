@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinema_app/domain/entities/movie.dart';
 
 import 'package:flutter/material.dart';
@@ -156,12 +157,14 @@ class _ActorsByMovie extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //foto
-                ClipRRect(
-                  child: Image.network(
-                    actor.profilePath,
-                    width: 135,
-                    height: 180,
-                    fit: BoxFit.cover,
+                FadeInRight(
+                  child: ClipRRect(
+                    child: Image.network(
+                      actor.profilePath,
+                      width: 135,
+                      height: 180,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 // nombre
@@ -208,10 +211,15 @@ class _SliverAppBarMovie extends StatelessWidget {
           textAlign: TextAlign.justify,
         ),*/
         background: Stack(children: [
+
           SizedBox.expand(
             child: Image.network(
               movie.posterPath,
               fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if(loadingProgress!= null) return const SizedBox();
+                return FadeIn(child: child);
+              },
             ),
           ),
           const SizedBox.expand(
