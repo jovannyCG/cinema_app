@@ -1,3 +1,4 @@
+import 'package:cinema_app/presentation/delegates/search_delegate_movie.dart';
 import 'package:flutter/material.dart';
 
 class AppBarMovie extends StatelessWidget {
@@ -18,7 +19,11 @@ class AppBarMovie extends StatelessWidget {
             const SizedBox(width: 5,),
             Text('CINEMA APP', style: titleStyle,),
             const Spacer(),
-            IconButton(onPressed: (){}, icon: const Icon(Icons.search))
+            IconButton(onPressed: (){
+                showSearch(context: context, 
+                delegate: SearchMovieDelegate());
+
+            }, icon: const Icon(Icons.search))
           ],
         ),
       ),
