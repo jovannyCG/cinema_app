@@ -18,7 +18,7 @@ class MovieMapper {
       popularity: moviedb.popularity,
       posterPath: (moviedb.posterPath != '')
       ? 'https://image.tmdb.org/t/p/w500${moviedb.posterPath}'
-      : 'no poster',
+      : 'https://www.tv-films.co.uk/media/posters/poster-not-available.png',
       releaseDate: moviedb.releaseDate,
       //releaseDate: moviedb.releaseDate != null ? moviedb.releaseDate! :DateTime.now(),
       title: moviedb.title,
