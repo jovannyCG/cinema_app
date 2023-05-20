@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cinema_app/config/helpers/human_formats.dart';
 import 'package:cinema_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 //implementacipon de las busquedas
@@ -26,7 +27,8 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     ];
   }
 
-//este metodo construye un icono/boton que aparece al realizar la busqueda, ese icono hace una accion espesifíca
+//este metodo construye un icono/boton que aparece al realizar la busqueda, ese icono hace una accion espesifíca, en este caso
+//vuelve a la pantalla principal
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
@@ -96,7 +98,14 @@ class _MovieSearchItem extends StatelessWidget {
               Text(movie.title, style: textStyle.titleMedium,),
               (movie.overview.length > 100)
               ? Text('${movie.overview.substring(0,100)}...' )
-              :Text(movie.overview)
+              :Text(movie.overview),
+              Row(children: [
+                Icon(Icons.star_half_rounded, color: Colors.yellow.shade800,),
+                const SizedBox(width: 5,),
+                Text(HumanFormats.number(movie.voteAverage, 1),
+                style: textStyle.bodyMedium!.copyWith(color:Colors.yellow.shade900, ),
+                )
+              ],)
               
             ],
           ))
