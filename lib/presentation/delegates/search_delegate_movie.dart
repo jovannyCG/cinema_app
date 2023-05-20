@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cinema_app/config/helpers/human_formats.dart';
 import 'package:cinema_app/domain/entities/movie.dart';
@@ -8,8 +10,24 @@ typedef SearchMoviesCallBack = Future<List<Movie>> Function(String query);
 
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
   final SearchMoviesCallBack searchMovies;
+  StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
+  Timer? _debouncedTimer;
 
   SearchMovieDelegate({required this.searchMovies});
+
+ //esta funcion emite el resultado de la busqueda de peliculas hasta que el usuario deja de escribir, en lugar
+ // de hacer una busqueda cada vez que se pulsa una letra
+  void _OnQueryCahnge (String query){
+    //verificar si el timer esta activo si es asi; se cancela.
+    if(_debouncedTimer?.isActive ?? false) _debouncedTimer!.cancel();
+
+    // establecer duración del timer, despues de que se cumple el tiempo se ejecuta el callback
+    _debouncedTimer =Timer(const Duration(milliseconds: 500), () { 
+
+
+
+    });
+  }
 
   //cambiar la frase que aparece al abrir la busqueda
   @override
@@ -47,8 +65,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   // este metodo provee sugerencias en base a la busqueda realiza
   @override
   Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder(
-        future: searchMovies(query),
+    _OnQueryCahnge(query);
+    return StreamBuilder(
+      stream: debouncedMovies.stream,
+      //  future: searchMovies(query),
         builder: (context, snapshot) {
           final movies = snapshot.data ?? [];
 
