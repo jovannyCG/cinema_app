@@ -15,17 +15,30 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   SearchMovieDelegate({required this.searchMovies});
 
- //esta funcion emite el resultado de la busqueda de peliculas hasta que el usuario deja de escribir, en lugar
- // de hacer una busqueda cada vez que se pulsa una letra
-  void _OnQueryCahnge (String query){
+//limpiar el stream cuando deje de ser emitir valores
+  void clearStream() {
+    debouncedMovies.close();
+  }
+
+  //esta funcion emite el resultado de la busqueda de peliculas hasta que el usuario deja de escribir, en lugar
+  // de hacer una busqueda cada vez que se pulsa una letra
+  void _onQueryChange(String query) {
     //verificar si el timer esta activo si es asi; se cancela.
-    if(_debouncedTimer?.isActive ?? false) _debouncedTimer!.cancel();
+    if (_debouncedTimer?.isActive ?? false) _debouncedTimer!.cancel();
 
     // establecer duración del timer, despues de que se cumple el tiempo se ejecuta el callback
-    _debouncedTimer =Timer(const Duration(milliseconds: 500), () { 
+    _debouncedTimer = Timer(const Duration(milliseconds: 500), () async {
+      // verificiar si el usuario escribio algo, para no buscar un arreglo vacio, la evaluación se hace en este punto
+      // para conservar los resultados de busquedas anteriores, para hacer lo contrario la evalacion se debe hacer al inicio
+      if (query.isEmpty) {
+        // se agrega una lista vacia (no se muestra nada en pantalla)
+        debouncedMovies.add([]);
+        return;
+      }
 
-
-
+      // se buscan las peliculas y se añaden al stream
+      final movies = await searchMovies(query);
+      debouncedMovies.add(movies);
     });
   }
 
@@ -51,6 +64,8 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
         onPressed: () {
+          //se cierra el strem al salir de la busqueda
+          clearStream();
           close(context, null);
         },
         icon: const Icon(Icons.arrow_back_outlined));
@@ -65,10 +80,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   // este metodo provee sugerencias en base a la busqueda realiza
   @override
   Widget buildSuggestions(BuildContext context) {
-    _OnQueryCahnge(query);
+    _onQueryChange(query);
     return StreamBuilder(
-      stream: debouncedMovies.stream,
-      //  future: searchMovies(query),
+        stream: debouncedMovies.stream,
+        //  future: searchMovies(query),
         builder: (context, snapshot) {
           final movies = snapshot.data ?? [];
 
@@ -76,8 +91,13 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
               itemCount: movies.length,
               itemBuilder: (context, index) {
                 return _MovieSearchItem(
-                  movie: movies[index], 
-                  onMovieSelected: close,
+                  movie: movies[index],
+                  onMovieSelected: (context, movie) {
+                    //se cierra el strem al navegar a la pantalla de la pelicula seleccionada
+                    clearStream();
+                    // navegar a la pelicula seleccionada
+                    close(context, movie);
+                  },
                 );
               });
         });
@@ -95,7 +115,9 @@ class _MovieSearchItem extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme;
     return GestureDetector(
       //al seleccionar una pelicula de la lista onTap devuelve la pantalla de la pelicula seleccionada
-      onTap: (){onMovieSelected(context, movie);},
+      onTap: () {
+        onMovieSelected(context, movie);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
@@ -109,31 +131,44 @@ class _MovieSearchItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
                     movie.posterPath,
-                    loadingBuilder: (context, child, loadingProgress) => FadeIn(child: child),
-                    )
-                    )
-                    ),
-                    const SizedBox(width: 10,),
+                    loadingBuilder: (context, child, loadingProgress) =>
+                        FadeIn(child: child),
+                  ))),
+          const SizedBox(
+            width: 10,
+          ),
           //descricpción
           SizedBox(
-            width: size.width *0.7,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(movie.title, style: textStyle.titleMedium,),
-                (movie.overview.length > 100)
-                ? Text('${movie.overview.substring(0,100)}...' )
-                :Text(movie.overview),
-                Row(children: [
-                  Icon(Icons.star_half_rounded, color: Colors.yellow.shade800,),
-                  const SizedBox(width: 5,),
-                  Text(HumanFormats.number(movie.voteAverage, 1),
-                  style: textStyle.bodyMedium!.copyWith(color:Colors.yellow.shade900, ),
+              width: size.width * 0.7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    style: textStyle.titleMedium,
+                  ),
+                  (movie.overview.length > 100)
+                      ? Text('${movie.overview.substring(0, 100)}...')
+                      : Text(movie.overview),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star_half_rounded,
+                        color: Colors.yellow.shade800,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        HumanFormats.number(movie.voteAverage, 1),
+                        style: textStyle.bodyMedium!.copyWith(
+                          color: Colors.yellow.shade900,
+                        ),
+                      )
+                    ],
                   )
-                ],)
-                
-              ],
-            ))
+                ],
+              ))
         ]),
       ),
     );
