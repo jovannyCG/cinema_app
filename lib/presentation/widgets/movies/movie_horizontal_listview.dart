@@ -74,7 +74,8 @@ class _SlideHorizontal extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.center, 
+      children: [
         SizedBox(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
