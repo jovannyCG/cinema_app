@@ -34,19 +34,14 @@ class AppBarMovie extends ConsumerWidget {
               const Spacer(),
               IconButton(
                   onPressed: () {
-                    final movieRepository = ref.read(movieRepositoryProvider);
-                    final searchQuqery = ref.read(searchQueryProvider);
+                    //final searchedMovies= ref.read(searchedMoviesProvider);
+                    final searchQuery = ref.read(searchQueryProvider);
                     showSearch<Movie?>(
                       //mostrar la busqueda anterior
-                      query: searchQuqery,
+                      query: searchQuery,
                             context: context,
                             delegate: SearchMovieDelegate(
-                                searchMovies: (query){
-                                  //guardar el query en el provider
-                                  ref.read(searchQueryProvider.notifier).update((state) => query);
-                                  //realizar la busqueda
-                                  return movieRepository.searchMovie(query);
-                                }))
+                                searchMovies: ref.read(searchedMoviesProvider.notifier).searchMoviesByQuery))
                         .then((movie) {
                       if (movie == null) return;
                       context.push('/movie/${movie.id}');
