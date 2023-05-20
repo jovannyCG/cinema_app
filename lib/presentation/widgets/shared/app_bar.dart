@@ -1,6 +1,6 @@
 import 'package:cinema_app/domain/entities/movie.dart';
 import 'package:cinema_app/presentation/delegates/search_delegate_movie.dart';
-import 'package:cinema_app/presentation/providers/movies/movies_repository_provider.dart';
+import 'package:cinema_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,10 +35,18 @@ class AppBarMovie extends ConsumerWidget {
               IconButton(
                   onPressed: () {
                     final movieRepository = ref.read(movieRepositoryProvider);
+                    final searchQuqery = ref.read(searchQueryProvider);
                     showSearch<Movie?>(
+                      //mostrar la busqueda anterior
+                      query: searchQuqery,
                             context: context,
                             delegate: SearchMovieDelegate(
-                                searchMovies: movieRepository.searchMovie))
+                                searchMovies: (query){
+                                  //guardar el query en el provider
+                                  ref.read(searchQueryProvider.notifier).update((state) => query);
+                                  //realizar la busqueda
+                                  return movieRepository.searchMovie(query);
+                                }))
                         .then((movie) {
                       if (movie == null) return;
                       context.push('/movie/${movie.id}');

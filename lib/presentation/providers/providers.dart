@@ -6,3 +6,4 @@ export 'package:cinema_app/presentation/providers/movies/initial_loading_provide
 export 'package:cinema_app/presentation/providers/movies/movie_info_provider.dart';
 export 'package:cinema_app/presentation/providers/actors/actors_by_movie_provider.dart';
 export 'package:cinema_app/presentation/providers/actors/actors_repository_provider.dart';
+export 'package:cinema_app/presentation/providers/search/search_movie_provider.dart';
