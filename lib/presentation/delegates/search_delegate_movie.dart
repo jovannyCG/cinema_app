@@ -10,10 +10,14 @@ typedef SearchMoviesCallBack = Future<List<Movie>> Function(String query);
 
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
   final SearchMoviesCallBack searchMovies;
+  final List<Movie> initialMovies;
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
   Timer? _debouncedTimer;
 
-  SearchMovieDelegate({required this.searchMovies});
+  SearchMovieDelegate({
+    required this.searchMovies,
+    required this.initialMovies,
+  });
 
 //limpiar el stream cuando deje de ser emitir valores
   void clearStream() {
@@ -28,14 +32,6 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
     // establecer duración del timer, despues de que se cumple el tiempo se ejecuta el callback
     _debouncedTimer = Timer(const Duration(milliseconds: 500), () async {
-      // verificiar si el usuario escribio algo, para no buscar un arreglo vacio, la evaluación se hace en este punto
-      // para conservar los resultados de busquedas anteriores, para hacer lo contrario la evalacion se debe hacer al inicio
-      if (query.isEmpty) {
-        // se agrega una lista vacia (no se muestra nada en pantalla)
-        debouncedMovies.add([]);
-        return;
-      }
-
       // se buscan las peliculas y se añaden al stream
       final movies = await searchMovies(query);
       debouncedMovies.add(movies);
@@ -82,6 +78,8 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   Widget buildSuggestions(BuildContext context) {
     _onQueryChange(query);
     return StreamBuilder(
+      // se establece la data inicial para no realizar peticines de una query que ya se ha hecho
+      initialData: initialMovies,
         stream: debouncedMovies.stream,
         //  future: searchMovies(query),
         builder: (context, snapshot) {

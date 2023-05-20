@@ -34,13 +34,14 @@ class AppBarMovie extends ConsumerWidget {
               const Spacer(),
               IconButton(
                   onPressed: () {
-                    //final searchedMovies= ref.read(searchedMoviesProvider);
+                    final searchedMovies= ref.read(searchedMoviesProvider);
                     final searchQuery = ref.read(searchQueryProvider);
                     showSearch<Movie?>(
                       //mostrar la busqueda anterior
                       query: searchQuery,
                             context: context,
                             delegate: SearchMovieDelegate(
+                              initialMovies:  searchedMovies,
                                 searchMovies: ref.read(searchedMoviesProvider.notifier).searchMoviesByQuery))
                         .then((movie) {
                       if (movie == null) return;
