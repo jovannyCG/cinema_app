@@ -12,6 +12,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   final SearchMoviesCallBack searchMovies;
   List<Movie> initialMovies;
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
+  StreamController<bool> isLoadingStram = StreamController.broadcast();
   Timer? _debouncedTimer;
 
   SearchMovieDelegate({
@@ -22,11 +23,13 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 //limpiar el stream cuando deje de ser emitir valores
   void clearStream() {
     debouncedMovies.close();
+    isLoadingStram.close();
   }
 
   //esta funcion emite el resultado de la busqueda de peliculas hasta que el usuario deja de escribir, en lugar
   // de hacer una busqueda cada vez que se pulsa una letra
   void _onQueryChange(String query) {
+    isLoadingStram.add(true);
     //verificar si el timer esta activo si es asi; se cancela.
     if (_debouncedTimer?.isActive ?? false) _debouncedTimer!.cancel();
 
@@ -36,6 +39,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       final movies = await searchMovies(query);
       debouncedMovies.add(movies);
       initialMovies = movies;
+      isLoadingStram.add(false);
     });
   }
 
@@ -45,13 +49,27 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      //if(query.isNotEmpty)
-      FadeIn(
-        animate: query.isNotEmpty,
-        duration: const Duration(milliseconds: 500),
-        child: IconButton(
-            onPressed: () => query = '', icon: const Icon(Icons.clear)),
-      )
+      StreamBuilder(
+          initialData: false,
+          stream: isLoadingStram.stream,
+          builder: (context, snapshot) {
+            if (snapshot.data ?? false) {
+              return SpinPerfect(
+                spins: 10,
+                infinite: true,
+                duration: const Duration(seconds: 20),
+                child: IconButton(
+                    onPressed: () => query = '',
+                    icon: const Icon(Icons.refresh_rounded)),
+              );
+            }
+           return FadeIn(
+              animate: query.isNotEmpty,
+              duration: const Duration(milliseconds: 500),
+              child: IconButton(
+                  onPressed: () => query = '', icon: const Icon(Icons.clear)),
+            );
+          }),
     ];
   }
 
@@ -61,7 +79,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
         onPressed: () {
-          //se cierra el strem al salir de la busqueda
+          //se cierra el stream al salir de la busqueda
           clearStream();
           close(context, null);
         },
@@ -80,30 +98,31 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     _onQueryChange(query);
     return buildResultsAndSuggestions();
   }
+
 // este metodo construye los resultados del buildSuggestions y buildResults para no repetir el mismo código
   Widget buildResultsAndSuggestions() {
     return StreamBuilder(
-      // se establece la data inicial para no realizar peticines de una query que ya se ha hecho
-      initialData: initialMovies,
-      stream: debouncedMovies.stream,
-      //  future: searchMovies(query),
-      builder: (context, snapshot) {
-        final movies = snapshot.data ?? [];
+        // se establece la data inicial para no realizar peticines de una query que ya se ha hecho
+        initialData: initialMovies,
+        stream: debouncedMovies.stream,
+        //  future: searchMovies(query),
+        builder: (context, snapshot) {
+          final movies = snapshot.data ?? [];
 
-        return ListView.builder(
-            itemCount: movies.length,
-            itemBuilder: (context, index) {
-              return _MovieSearchItem(
-                movie: movies[index],
-                onMovieSelected: (context, movie) {
-                  //se cierra el strem al navegar a la pantalla de la pelicula seleccionada
-                  clearStream();
-                  // navegar a la pelicula seleccionada
-                  close(context, movie);
-                },
-              );
-            });
-      });
+          return ListView.builder(
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                return _MovieSearchItem(
+                  movie: movies[index],
+                  onMovieSelected: (context, movie) {
+                    //se cierra el strem al navegar a la pantalla de la pelicula seleccionada
+                    clearStream();
+                    // navegar a la pelicula seleccionada
+                    close(context, movie);
+                  },
+                );
+              });
+        });
   }
 }
 
