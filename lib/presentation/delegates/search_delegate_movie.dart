@@ -10,7 +10,7 @@ typedef SearchMoviesCallBack = Future<List<Movie>> Function(String query);
 
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
   final SearchMoviesCallBack searchMovies;
-  final List<Movie> initialMovies;
+  List<Movie> initialMovies;
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
   Timer? _debouncedTimer;
 
@@ -35,6 +35,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       // se buscan las peliculas y se añaden al stream
       final movies = await searchMovies(query);
       debouncedMovies.add(movies);
+      initialMovies = movies;
     });
   }
 
@@ -70,35 +71,39 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   //este metodo construye los resultados de la buqueda
   @override
   Widget buildResults(BuildContext context) {
-    return const Text('buildResults');
+    return buildResultsAndSuggestions();
   }
 
   // este metodo provee sugerencias en base a la busqueda realiza
   @override
   Widget buildSuggestions(BuildContext context) {
     _onQueryChange(query);
+    return buildResultsAndSuggestions();
+  }
+// este metodo construye los resultados del buildSuggestions y buildResults para no repetir el mismo código
+  Widget buildResultsAndSuggestions() {
     return StreamBuilder(
       // se establece la data inicial para no realizar peticines de una query que ya se ha hecho
       initialData: initialMovies,
-        stream: debouncedMovies.stream,
-        //  future: searchMovies(query),
-        builder: (context, snapshot) {
-          final movies = snapshot.data ?? [];
+      stream: debouncedMovies.stream,
+      //  future: searchMovies(query),
+      builder: (context, snapshot) {
+        final movies = snapshot.data ?? [];
 
-          return ListView.builder(
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                return _MovieSearchItem(
-                  movie: movies[index],
-                  onMovieSelected: (context, movie) {
-                    //se cierra el strem al navegar a la pantalla de la pelicula seleccionada
-                    clearStream();
-                    // navegar a la pelicula seleccionada
-                    close(context, movie);
-                  },
-                );
-              });
-        });
+        return ListView.builder(
+            itemCount: movies.length,
+            itemBuilder: (context, index) {
+              return _MovieSearchItem(
+                movie: movies[index],
+                onMovieSelected: (context, movie) {
+                  //se cierra el strem al navegar a la pantalla de la pelicula seleccionada
+                  clearStream();
+                  // navegar a la pelicula seleccionada
+                  close(context, movie);
+                },
+              );
+            });
+      });
   }
 }
 
