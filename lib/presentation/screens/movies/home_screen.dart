@@ -12,15 +12,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      bottomNavigationBar:  NavigationBarMovies(),
-      body: IndexedStack(
-        index: pageIndex,
-        children:viewRoutes
-         
-    
+      bottomNavigationBar: NavigationBarMovies(
+        currentIndex: pageIndex,
       ),
+      body: IndexedStack(index: pageIndex, children: viewRoutes),
     );
   }
 }
