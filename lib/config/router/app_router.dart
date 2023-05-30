@@ -6,28 +6,30 @@ final appRouter = GoRouter(
   initialLocation: '/home/0',
   routes: [
     GoRoute(
-      name: HomePage.name,
-      path: '/home/:page',
-      builder: (context, state) {
-        //obtner el inidice de la pagina del state
-        final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
-        return  HomePage(pageIndex: pageIndex,);
-      },
-      routes: [
+        name: HomePage.name,
+        path: '/home/:page',
+        builder: (context, state) {
+          //obtener el inidice de la pagina del state
+          final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
+          return HomePage(
+            pageIndex: pageIndex,
+          );
+        },
+        routes: [
+          GoRoute(
+              name: MovieScreen.name,
+              path: 'movie/:id',
+              builder: (context, state) {
+                final movieId = state.pathParameters['id'] ?? 'no-id';
+                return MovieScreen(
+                  movieId: movieId,
+                );
+              }),
+        ]
+        ),
         GoRoute(
-      name: MovieScreen.name,
-      path: 'movie/:id',
-      builder: (context, state) {
-        final movieId = state.pathParameters['id'] ?? 'no-id';
-        return  MovieScreen(movieId: movieId,);
-      }
-    ),
-
-    GoRoute(path: '/',
-    redirect: (_, __) => '/home/0',
+      path: '/',
+    redirect: ( _, __ ) => '/home/0',
     )
-      ]
-    ),
-    
   ],
 );
