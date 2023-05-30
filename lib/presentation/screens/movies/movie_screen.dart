@@ -199,6 +199,16 @@ class _SliverAppBarMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
+      actions: [
+        IconButton(
+            onPressed: () {},
+
+            //icon: const Icon(Icons.favorite_border)
+            icon: const Icon(
+              Icons.favorite_rounded,
+              color: Colors.red,
+            ))
+      ],
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
@@ -211,39 +221,60 @@ class _SliverAppBarMovie extends StatelessWidget {
           textAlign: TextAlign.justify,
         ),*/
         background: Stack(children: [
-
           SizedBox.expand(
             child: Image.network(
               movie.posterPath,
               fit: BoxFit.cover,
               loadingBuilder: (context, child, loadingProgress) {
-                if(loadingProgress!= null) return const SizedBox();
+                if (loadingProgress != null) return const SizedBox();
                 return FadeIn(child: child);
               },
             ),
           ),
-          const SizedBox.expand(
-            child: DecoratedBox(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [0.7, 1.0],
-                        colors: [Colors.transparent, Colors.black87]))),
+          
+          const _GradientPoster(
+            begin: Alignment.topRight,
+            colors: [Colors.black54, Colors.transparent],
+            end: Alignment.bottomLeft,
+            stops: [0.0, 0.2],
           ),
-          const SizedBox.expand(
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      gradient:
-                          LinearGradient(begin: Alignment.topLeft, stops: [
-            0.0,
-            0.4
-          ], colors: [
-            Colors.black87,
-            Colors.transparent,
-          ])))),
+          const _GradientPoster(
+            begin: Alignment.topCenter,
+            colors: [Colors.transparent, Colors.black54],
+            end: Alignment.bottomCenter,
+            stops: [0.8, 1.0],
+          ),
+          const _GradientPoster(
+            begin: Alignment.topLeft,
+            colors: [Colors.black87, Colors.transparent],
+            stops: [0.0, 0.3],
+          ),
         ]),
       ),
+    );
+  }
+}
+
+class _GradientPoster extends StatelessWidget {
+  final AlignmentGeometry? begin;
+  final AlignmentGeometry? end;
+  final List<Color> colors;
+  final List<double> stops;
+
+  const _GradientPoster(
+      {
+       this.begin = Alignment.centerLeft,
+       this.end = Alignment.centerRight,
+      required this.colors,
+      required this.stops});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: begin!, end: end!, stops: stops, colors: colors))),
     );
   }
 }

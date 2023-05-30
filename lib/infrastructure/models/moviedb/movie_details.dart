@@ -120,8 +120,8 @@ class MovieDetails {
 class BelongsToCollection {
     final int id;
     final String name;
-    final String posterPath;
-    final String backdropPath;
+    final String? posterPath;
+    final String? backdropPath;
 
     BelongsToCollection({
         required this.id,
@@ -137,8 +137,8 @@ class BelongsToCollection {
     factory BelongsToCollection.fromMap(Map<String, dynamic> json) => BelongsToCollection(
         id: json["id"],
         name: json["name"],
-        posterPath: json["poster_path"],
-        backdropPath: json["backdrop_path"],
+        posterPath: json["poster_path"] ?? "np poster_ path",
+        backdropPath: json["backdrop_path"] ?? "no backdrop_path",
     );
 
     Map<String, dynamic> toMap() => {
