@@ -231,7 +231,6 @@ class _SliverAppBarMovie extends StatelessWidget {
               },
             ),
           ),
-          
           const _GradientPoster(
             begin: Alignment.topRight,
             colors: [Colors.black54, Colors.transparent],
@@ -262,9 +261,8 @@ class _GradientPoster extends StatelessWidget {
   final List<double> stops;
 
   const _GradientPoster(
-      {
-       this.begin = Alignment.centerLeft,
-       this.end = Alignment.centerRight,
+      {this.begin = Alignment.centerLeft,
+      this.end = Alignment.centerRight,
       required this.colors,
       required this.stops});
 
