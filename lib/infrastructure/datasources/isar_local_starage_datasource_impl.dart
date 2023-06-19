@@ -26,12 +26,13 @@ class IsarLocalStorageDataSourceImplementation extends LocalStorageDataSource {
     final Movie? isFavoriteMovie =
         await isar.movies.filter().idEqualTo(movieId).findFirst();
 
-        return isFavoriteMovie != null;
+    return isFavoriteMovie != null;
   }
 
   @override
-  Future<List<Movie>> loadMovies({int limit = 10, offset = 0}) {
-    throw UnimplementedError();
+  Future<List<Movie>> loadMovies({int limit = 10, offset = 0}) async {
+    final isar = await db;
+    return isar.movies.where().offset(offset).limit(limit).findAll();
   }
 
   @override
