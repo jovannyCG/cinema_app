@@ -36,7 +36,15 @@ class IsarLocalStorageDataSourceImplementation extends LocalStorageDataSource {
   }
 
   @override
-  Future<void> toggleFavorite(Movie movie) {
-    throw UnimplementedError();
+  Future<void> toggleFavorite(Movie movie) async {
+    final isar = await db;
+    final favoriteMovie =
+        await isar.movies.filter().idEqualTo(movie.id).findFirst();
+    if (favoriteMovie != null) {
+      isar.writeTxnSync(() => isar.movies.deleteSync(favoriteMovie.isarid!));
+      return;
+    }
+    //insertar pelicula en la base de datos
+    isar.writeTxnSync(() => isar.movies.putSync(movie));
   }
 }
