@@ -8,3 +8,4 @@ export 'package:cinema_app/presentation/providers/actors/actors_by_movie_provide
 export 'package:cinema_app/presentation/providers/actors/actors_repository_provider.dart';
 export 'package:cinema_app/presentation/providers/search/search_movie_provider.dart';
 export 'package:cinema_app/presentation/providers/storage/local_storage_provider.dart';
+export 'package:cinema_app/presentation/providers/storage/favorites_movies_provider.dart';
